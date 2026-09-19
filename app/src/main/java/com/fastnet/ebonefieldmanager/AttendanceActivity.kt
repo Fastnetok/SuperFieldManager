@@ -1,6 +1,7 @@
 package com.fastnet.ebonefieldmanager
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -328,14 +329,13 @@ class AttendanceActivity : AppCompatActivity() {
         checkApprovedLeave()
         loadMonthlyStats()
 
-        // FIX (requested): once the employee's forced morning check-in has
-        // actually completed (a real session now exists today), briefly
-        // show the confirmed "Checked in!" state, then automatically return
-        // to MainActivity's dashboard — no manual back-press needed. Guarded
-        // so this only fires once per screen instance.
+        // Once the required morning check-in is saved, open the dashboard.
+        // MainActivity was finished when it redirected here, so calling only
+        // finish() would leave no activity in the task and close the app.
         if (isForcedMorningCheckIn && sessions.isNotEmpty() && !autoReturnedAfterForcedCheckIn) {
             autoReturnedAfterForcedCheckIn = true
-            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({ finish() }, 900)
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
