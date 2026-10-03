@@ -1,0 +1,3 @@
+package com.example.superfieldmanager
+
+class ExampleUnitTest

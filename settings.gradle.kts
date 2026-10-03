@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ebone Field Manager"
+rootProject.name = "SuperFieldManager"
 include(":app")
  

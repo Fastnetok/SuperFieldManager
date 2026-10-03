@@ -29,7 +29,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:133465084190:android:66bc5c3f5e1ce260d6390f",
         "android_client_info": {
-          "package_name": "com.fastnet.ebonefieldmanager"
+          "package_name": "com.example.superfieldmanager"
         }
       },
       "oauth_client": [],

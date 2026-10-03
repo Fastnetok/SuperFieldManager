@@ -9,7 +9,7 @@ plugins {
 android {
 
     namespace =
-        "com.fastnet.ebonefieldmanager"
+        "com.example.superfieldmanager"
 
     compileSdk = 34
 
@@ -36,7 +36,7 @@ android {
     defaultConfig {
 
         applicationId =
-            "com.fastnet.ebonefieldmanager"
+            "com.example.superfieldmanager"
 
         minSdk = 24
 

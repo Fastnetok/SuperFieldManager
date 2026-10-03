@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
                 android:layout_weight="1"
-                android:text="EBONE FIELD MANAGER"
+                android:text="SUPER FIELD MANAGER"
                 android:textColor="#111111"
                 android:textSize="20sp"
                 android:textStyle="bold" />
