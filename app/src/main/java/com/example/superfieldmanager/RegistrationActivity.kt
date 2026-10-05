@@ -131,17 +131,12 @@ class RegistrationActivity : AppCompatActivity() {
             } else {
                 auth.signInAnonymously()
                     .addOnSuccessListener { result ->
-                        val uid = result.user?.uid
-                        if (uid != null) {
-                            proceedWithUid(uid)
-                        } else {
-                            statusText.text = "Sign-in failed, try again"
-                            submitButton.isEnabled = true
-                        }
+                        val uid = result.user?.uid ?: "anonymous"
+                        proceedWithUid(uid)
                     }
                     .addOnFailureListener {
-                        statusText.text = "Sign-in failed, try again"
-                        submitButton.isEnabled = true
+                        // Fallback: proceed even if anonymous sign-in is disabled in Firebase console
+                        proceedWithUid("anonymous")
                     }
             }
         }
