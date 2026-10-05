@@ -23,6 +23,7 @@ import java.io.InputStream
 import android.Manifest
 import android.os.Build
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.database.DataSnapshot
@@ -306,37 +307,56 @@ class MainActivity : AppCompatActivity() {
             Settings.Secure.ANDROID_ID
         )
 
-// ← YEH NEECHE ADD KAREIN
-// App version save for admin tracking
-        val appVersion = try {
-            packageManager.getPackageInfo(packageName, 0).versionName ?: ""
-        } catch (e: Exception) { "" }
-        if (appVersion.isNotEmpty()) {
-            FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
-                .getReference("ApprovedDevices")
-                .child(androidId)
-                .updateChildren(mapOf(
-                    "appVersion" to appVersion,
-                    "lastVersionUpdate" to System.currentTimeMillis()
-                ))
-        }
-
-        com.google.firebase.database.FirebaseDatabase
-            .getInstance()
+        // SECURITY FIX: Verify with Firebase on every startup if this device is still approved in ApprovedDevices.
+        // If Admin deleted this employee, snapshot won't exist -> force clear local session and go to RegistrationActivity.
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
             .getReference("ApprovedDevices")
             .child(androidId)
-            .child("employeeName")
             .get()
             .addOnSuccessListener { snapshot ->
-                val employeeName = snapshot.value?.toString() ?: ""
-                if (employeeName.isNotEmpty()) {
-                    EmployeeSession.setEmployeeName(employeeName)
-                    refreshDashboard()
-                    FirebaseTokenManager.saveToken(this)
-                    // NEW: gift box (New Connection) note display depends
-                    // on the employee name being known — start listening
-                    // for it here, right after the name is set.
-                    startGiftBoxListener(employeeName)
+                val employeeName = snapshot.child("employeeName").getValue(String::class.java) ?: ""
+                val status = snapshot.child("status").getValue(String::class.java) ?: ""
+
+                if (!snapshot.exists() || employeeName.isEmpty() || status.equals("Deleted", ignoreCase = true)) {
+                    // Admin deleted this employee! Clear local registration and force re-registration.
+                    RegistrationManager.clearRegistration(this@MainActivity)
+                    Toast.makeText(this@MainActivity, "Account removed by Admin. Please register again.", Toast.LENGTH_LONG).show()
+                    startActivity(Intent(this@MainActivity, RegistrationActivity::class.java))
+                    finish()
+                    return@addOnSuccessListener
+                }
+
+                // Device is confirmed approved by Admin! Now safe to update app version and load dashboard.
+                val appVersion = try {
+                    packageManager.getPackageInfo(packageName, 0).versionName ?: ""
+                } catch (e: Exception) { "" }
+                if (appVersion.isNotEmpty()) {
+                    FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
+                        .getReference("ApprovedDevices")
+                        .child(androidId)
+                        .updateChildren(mapOf(
+                            "appVersion" to appVersion,
+                            "lastVersionUpdate" to System.currentTimeMillis()
+                        ))
+                }
+
+                EmployeeSession.setEmployeeName(employeeName)
+                refreshDashboard()
+                FirebaseTokenManager.saveToken(this@MainActivity)
+                startGiftBoxListener(employeeName)
+            }
+            .addOnFailureListener {
+                // If offline, fall back gracefully to local session if previously registered, but do not auto-recreate if deleted.
+                if (!RegistrationManager.isRegistered(this@MainActivity)) {
+                    startActivity(Intent(this@MainActivity, RegistrationActivity::class.java))
+                    finish()
+                } else {
+                    val localName = RegistrationManager.getEmployeeName(this@MainActivity)
+                    if (localName.isNotEmpty()) {
+                        EmployeeSession.setEmployeeName(localName)
+                        refreshDashboard()
+                        startGiftBoxListener(localName)
+                    }
                 }
             }
 
