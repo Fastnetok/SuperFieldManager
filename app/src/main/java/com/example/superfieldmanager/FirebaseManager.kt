@@ -134,21 +134,29 @@ object FirebaseManager {
                     return@addOnSuccessListener
                 }
 
-                val pinUpdate = mapOf(
+                val pinUpdate = mapOf<String, Any?>(
                     "status" to "CLAIMED",
                     "linkedAndroidId" to androidId,
                     "linkedUid" to uid,
-                    "mobileNumber" to mobileNumber
+                    "mobileNumber" to mobileNumber,
+                    "cell" to null,
+                    "mobile" to null,
+                    "phone" to null,
+                    "phoneNumber" to null
                 )
                 pinRef.updateChildren(pinUpdate)
 
-                val approvedDeviceData = hashMapOf(
+                val approvedDeviceData = mapOf<String, Any?>(
                     "androidId" to androidId,
                     "employeeName" to employeeName,
                     "mobileNumber" to mobileNumber,
                     "status" to "Approved",
                     "uid" to uid,
-                    "createdAt" to System.currentTimeMillis()
+                    "createdAt" to System.currentTimeMillis(),
+                    "cell" to null,
+                    "mobile" to null,
+                    "phone" to null,
+                    "phoneNumber" to null
                 )
 
                 database.getReference("ApprovedDevices")
