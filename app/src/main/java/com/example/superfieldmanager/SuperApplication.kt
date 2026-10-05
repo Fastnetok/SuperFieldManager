@@ -39,7 +39,7 @@ class SuperApplication : Application() {
         super.onCreate()
 
         try {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+            FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL).setPersistenceEnabled(true)
         } catch (e: Exception) {
             // Safe to ignore — this only throws if persistence was already
             // enabled for this instance (e.g. hot-reload during development).
@@ -47,6 +47,6 @@ class SuperApplication : Application() {
 
         // Keep the complaints list continuously cached to disk so it's
         // available the instant the app opens, even with no signal at all.
-        FirebaseDatabase.getInstance().getReference("complaints").keepSynced(true)
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL).getReference("complaints").keepSynced(true)
     }
 }

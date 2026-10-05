@@ -2,6 +2,7 @@
   "project_info": {
     "project_number": "693272934527",
     "project_id": "superadmin-9a853",
+    "firebase_url": "https://superadmin-9a853-default-rtdb.firebaseio.com",
     "storage_bucket": "superadmin-9a853.firebasestorage.app"
   },
   "client": [

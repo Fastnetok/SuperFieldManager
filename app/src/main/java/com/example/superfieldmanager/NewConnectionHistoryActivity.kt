@@ -13,7 +13,7 @@ class NewConnectionHistoryActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewConnectionAdapter
     private val connectionList = mutableListOf<NewConnection>()
-    private val db = FirebaseDatabase.getInstance()
+    private val db = FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

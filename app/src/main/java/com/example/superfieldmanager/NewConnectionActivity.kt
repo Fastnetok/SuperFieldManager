@@ -30,7 +30,7 @@ class NewConnectionActivity : AppCompatActivity() {
     private var giftBoxContainer: FrameLayout? = null
 
     private var activeConnection: NewConnection? = null
-    private val db = FirebaseDatabase.getInstance()
+    private val db = FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
 
     // CHANGED: the gift_box listener is now attached in onStart() and
     // detached in onStop(), instead of running for the entire lifetime

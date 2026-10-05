@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         ).format(java.util.Date())
 
         val androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        FirebaseDatabase.getInstance().getReference("attendance")
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL).getReference("attendance")
             .child(androidId).child(todayKey).get()
             .addOnSuccessListener { attSnap ->
                 attendanceGateInProgress = false
@@ -312,7 +312,7 @@ class MainActivity : AppCompatActivity() {
             packageManager.getPackageInfo(packageName, 0).versionName ?: ""
         } catch (e: Exception) { "" }
         if (appVersion.isNotEmpty()) {
-            com.google.firebase.database.FirebaseDatabase.getInstance()
+            FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
                 .getReference("ApprovedDevices")
                 .child(androidId)
                 .updateChildren(mapOf(
@@ -537,7 +537,7 @@ class MainActivity : AppCompatActivity() {
      * Pending box there), exactly as already fixed on that screen.
      */
     private fun startGiftBoxListener(employeeName: String) {
-        FirebaseDatabase.getInstance()
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
             .getReference("officeSettings/new_connections/gift_box")
             .child(employeeName)
             .addValueEventListener(object : ValueEventListener {

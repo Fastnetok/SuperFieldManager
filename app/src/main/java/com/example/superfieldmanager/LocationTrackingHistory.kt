@@ -97,7 +97,7 @@ class LocationTrackingHistory(private val context: Context) {
             "timestamp" to timestamp
         )
 
-        FirebaseDatabase.getInstance()
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
             .getReference("tracking")
             .child(employeeId)
             .child(dateKey)

@@ -21,7 +21,7 @@ import java.util.*
 
 class AttendanceActivity : AppCompatActivity() {
 
-    private val db = FirebaseDatabase.getInstance()
+    private val db = FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
     private var employeeName = ""
     private var deviceId = ""
     private var todayKey = ""

@@ -7,7 +7,7 @@ import com.google.firebase.database.FirebaseDatabase
 object FirebaseManager {
 
     private val database =
-        FirebaseDatabase.getInstance()
+        FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
 
     fun saveLocation(
         context: Context,
