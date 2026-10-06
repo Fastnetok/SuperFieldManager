@@ -30,6 +30,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -493,16 +494,18 @@ class MainActivity : AppCompatActivity() {
             currentComplaint?.let { complaint ->
 
                 val employeeName = EmployeeSession.getEmployeeName()
+                val normName = employeeName.trim().lowercase(Locale.getDefault())
 
-                val complaintRef = com.google.firebase.database
-                    .FirebaseDatabase
-                    .getInstance()
-                    .getReference("complaints")
-                    .child(complaint.complaintId)
+                val db = FirebaseDatabase.getInstance(FirebaseConstants.DATABASE_URL)
+                val complaintRef = db.getReference("complaints").child(complaint.complaintId)
 
-                complaintRef.child("status").setValue("Resolved")
-                complaintRef.child("resolvedBy").setValue(employeeName)
-                complaintRef.child("resolvedTime").setValue(System.currentTimeMillis())
+                val updates = hashMapOf<String, Any>(
+                    "status" to "Resolved",
+                    "resolvedBy" to employeeName,
+                    "resolvedTime" to System.currentTimeMillis()
+                )
+                complaintRef.updateChildren(updates)
+                db.getReference("employeeComplaints").child(normName).child(complaint.complaintId).updateChildren(updates)
 
                 refreshDashboard()
 
